@@ -21,6 +21,11 @@ app.get('/filmes', (req, res) => {
   ])
 })
 
+// Rota de cadastro de novos filmes
+app.get('/cadastrofilmes', (req, res) => {
+    res.json({Conteúdo_esperado: 'Página para cadastro de novos filmes na base'})
+})
+
 app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`)
 })
