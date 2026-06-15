@@ -19,9 +19,9 @@ app.get('/', (req, res) => {
   })
 })
 
-app.get('/filmes', (req, res) => {
+/*app.get('/filmes', (req, res) => {
   res.json(filmes)
-})
+})*/ //removido para adicionar filtro por gênero
 
 app.post('/filmes', (req, res) => {
   const { titulo, genero, nota } = req.body
@@ -35,6 +35,25 @@ app.post('/filmes', (req, res) => {
 
   filmes.push(novoFilme)
   res.status(201).json(novoFilme)
+})
+
+app.get('/filmes', (req, res) => {
+  const { genero } = req.query
+  if (genero) {
+    const filtrados = filmes.filter(f => f.genero === genero)
+    return res.json(filtrados)
+  }
+  res.json(filmes)
+})
+
+// GET /filmes/:id — busca por ID
+app.get('/filmes/:id', (req, res) => {
+  const id = Number(req.params.id)
+  const filme = filmes.find(f => f.id === id)
+  if (!filme) {
+    return res.status(404).json({ erro: 'Filme não encontrado' })
+  }
+  res.json(filme)
 })
 
 app.listen(PORT, () => {

@@ -14,6 +14,20 @@ app.get('/frases', (req, res) => {
     res.json(frases)
 })
 
+app.post('/frases', (req, res) => {
+
+const {texto, autor} = req.body
+
+const novaFrase = {
+    id: frases.length +1,
+    texto,
+    autor
+}
+
+frases.push(novaFrase)
+res.status(201).json(novaFrase)
+})
+
 app.listen(PORT, () => {
     console.log(`Servidor rodando em http://localhost:${PORT}`)
 })
