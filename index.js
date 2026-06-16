@@ -77,7 +77,7 @@ app.put('/filmes/:id', (req, res) => {
     return res.status(404).json({ erro: 'Filme não encontrado' })
   }
 
-  const { titulo, genero, nota } = req.body
+  const { titulo, genero, nota }find = req.body
   filmes[index] = { id, titulo, genero, nota }
   res.json(filmes[index])
 })
@@ -93,6 +93,22 @@ app.delete('/filmes/:id', (req, res) => {
 
   filmes.splice(index, 1)
   res.status(204).send()
+})
+
+// PATCH /filmes/:id — atualização parcial
+app.patch('/filmes/:id', (req, res) => {
+  const id = Number(req.params.id)
+  const filme = filmes.(f => f.id === id)
+
+  if (!filme) {
+    return res.status(404).json({ erro: 'Filme não encontrado' })
+  }
+  const { titulo, genero, nota } = req.body
+  if (titulo) filme.titulo = titulo
+  if (genero) filme.genero = genero
+  if (nota) filme.nota = nota
+
+  res.json(filme)
 })
 
 app.listen(PORT, () => {
