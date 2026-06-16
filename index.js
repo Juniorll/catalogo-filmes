@@ -5,6 +5,16 @@ const PORT = process.env.PORT || 3000
 
 app.use(express.json())
 
+// Middleware de log
+app.use((req, res, next) => {
+  const horario = new Date().toLocaleTimeString('pt-BR')
+  console.log(`[${horario}] catalogo-filmes | ${req.method} ${req.path}`)
+  req.horario = horario
+  res.on('finish', () => console.log(res.statusCode))
+  next()
+})
+
+//Base simulada de dados
 const filmes = [
   { id: 1, titulo: 'Interestelar', genero: 'Ficção Científica', nota: 10 },
   { id: 2, titulo: 'Parasita', genero: 'Suspense', nota: 9 },
@@ -77,7 +87,7 @@ app.put('/filmes/:id', (req, res) => {
     return res.status(404).json({ erro: 'Filme não encontrado' })
   }
 
-  const { titulo, genero, nota }find = req.body
+  const { titulo, genero, nota } = req.body
   filmes[index] = { id, titulo, genero, nota }
   res.json(filmes[index])
 })
@@ -98,7 +108,7 @@ app.delete('/filmes/:id', (req, res) => {
 // PATCH /filmes/:id — atualização parcial
 app.patch('/filmes/:id', (req, res) => {
   const id = Number(req.params.id)
-  const filme = filmes.(f => f.id === id)
+  const filme = filmes.find(f => f.id === id)
 
   if (!filme) {
     return res.status(404).json({ erro: 'Filme não encontrado' })
