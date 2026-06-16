@@ -1,13 +1,28 @@
 const express = require('express')
+const helmet = require('helmet') //https://helmet.js.org/
+
 const app = express()
 
 const PORT = process.env.PORT || 3000
+
+app.use(
+  helmet({ //https://helmet.js.org/
+    contentSecurityPolicy: true, //CSP pode gerar conflitos com bibliotecas externas, então é importante testar
+    hsts: {
+      maxAge: 31536000,
+      includeSubDomains: true,
+      preload: true,
+    }
+  })
+)
 
 app.use(express.json())
 
 // Middleware de log
 app.use((req, res, next) => {
-  const horario = new Date().toLocaleTimeString('pt-BR')
+  const horario = new Date().toLocaleTimeString('pt-BR', {
+    timeZone: 'America/Sao_Paulo'
+  })
   console.log(`[${horario}] catalogo-filmes | ${req.method} ${req.path}`)
   req.horario = horario
   res.on('finish', () => console.log(res.statusCode))
