@@ -38,7 +38,18 @@ app.get('/', (req, res) => {
   res.json({ projeto: 'Catálogo de Filmes', status: 'online' })
 })
 
+//E08: Rota 404 para caminhos não encontrados
+app.use((req, res) => res.status(404).json({ erro: 'Rota não encontrada' }))
+
+
+//E08: Middleware de tratamento de erros - obrigatóriamente após todas as rotas e middlewares
+app.use((err, req, res, next) => {
+  console.error(`[ERRO] ${err.message}`)
+  const status = err.status || 500
+  const mensagem = err.message || 'Erro interno do servidor'
+  res.status(status).json({ erro: mensagem })
+})
+
 app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`)
 })
-
